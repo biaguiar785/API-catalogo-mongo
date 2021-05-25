@@ -34,7 +34,7 @@ public class ProductController {
     public List<Product> listAllProducts() {
         return productRepository.findAll();
     }
-
+    
     @ApiOperation(value = "Adiciona um novo produto")
     @PostMapping
     public ResponseEntity<Object> createProduct(@RequestBody Product product) {
@@ -50,7 +50,6 @@ public class ProductController {
         }
 
     }
-
     @ApiOperation(value = "Modifica dados de um produto")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateProduct(@PathVariable String id, @RequestBody ProductDTO productDTO) {
