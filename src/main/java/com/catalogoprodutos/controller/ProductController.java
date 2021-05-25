@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/products")
 public class ProductController {
@@ -27,11 +29,13 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
+    @ApiOperation("Retorna uma lista de produtos")
     @GetMapping
     public List<Product> listAllProducts() {
         return productRepository.findAll();
     }
 
+    @ApiOperation(value = "Adiciona um novo produto")
     @PostMapping
     public ResponseEntity<Object> createProduct(@RequestBody Product product) {
         try {
@@ -47,6 +51,7 @@ public class ProductController {
 
     }
 
+    @ApiOperation(value = "Modifica dados de um produto")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateProduct(@PathVariable String id, @RequestBody ProductDTO productDTO) {
         Optional<Product> optional = productRepository.findById(id);
@@ -68,6 +73,7 @@ public class ProductController {
 
     }
 
+    @ApiOperation(value = "Deleta um produto")
     @DeleteMapping("/{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable String id) {
         Optional<Product> optional = productRepository.findById(id);
@@ -78,6 +84,7 @@ public class ProductController {
         return ResponseEntity.notFound().build();
     }
 
+    @ApiOperation(value = "Busca um produto pelo Id")
     @GetMapping("/{id}")
     public ResponseEntity<Product> searchProduct(@PathVariable String id) {
         Optional<Product> optional = productRepository.findById(id);
@@ -89,23 +96,24 @@ public class ProductController {
     }
 
     public boolean verify(Product product) {
-            if (product.getPrice().compareTo(Double.valueOf("0.00")) < 0) {
-                return false;
-            }
-            return true;
+        if (product.getPrice().compareTo(Double.valueOf("0.00")) < 0) {
+            return false;
         }
+        return true;
+    }
 
+    @ApiOperation(value = "Busca um produto com filtro")
     @GetMapping("/search")
-     public List<Product> search(@RequestParam(defaultValue = "0.00")Double min_value, 
-     @RequestParam(defaultValue = "9999999.99")Double max_value, @RequestParam(required = false) String q ){
+    public List<Product> search(@RequestParam(defaultValue = "0.00") Double min_value,
+            @RequestParam(defaultValue = "9999999.99") Double max_value, @RequestParam(required = false) String q) {
         List<Product> products;
-   
-        if (q == null){
-            products = productRepository.findByValue(min_value , max_value);
-         }else{
-            products = productRepository.findByValue(min_value , max_value, q);
-         }
-         return products;
+
+        if (q == null) {
+            products = productRepository.findByValue(min_value, max_value);
+        } else {
+            products = productRepository.findByValue(min_value, max_value, q);
+        }
+        return products;
     }
 
 }
