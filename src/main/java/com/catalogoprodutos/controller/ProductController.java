@@ -20,6 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@Api(value = "API REST Catalogo")
 @RestController
 @RequestMapping("/products")
 public class ProductController {
@@ -27,11 +31,13 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
+    @ApiOperation("Retorna uma lista de produtos")
     @GetMapping
     public List<Product> listAllProducts() {
         return productRepository.findAll();
     }
-
+    
+    @ApiOperation(value = "Adiciona um novo produto")
     @PostMapping
     public ResponseEntity<Object> createProduct(@RequestBody Product product) {
         try {
@@ -46,7 +52,7 @@ public class ProductController {
         }
 
     }
-
+    @ApiOperation(value = "Modifica dados de um produto")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateProduct(@PathVariable String id, @RequestBody ProductDTO productDTO) {
         Optional<Product> optional = productRepository.findById(id);
@@ -68,6 +74,7 @@ public class ProductController {
 
     }
 
+    @ApiOperation(value = "Deleta um produto")
     @DeleteMapping("/{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable String id) {
         Optional<Product> optional = productRepository.findById(id);
@@ -78,6 +85,7 @@ public class ProductController {
         return ResponseEntity.notFound().build();
     }
 
+    @ApiOperation(value = "Busca um produto pelo Id")
     @GetMapping("/{id}")
     public ResponseEntity<Product> searchProduct(@PathVariable String id) {
         Optional<Product> optional = productRepository.findById(id);
@@ -95,6 +103,7 @@ public class ProductController {
             return true;
         }
 
+    @ApiOperation(value = "Busca um produto com filtro")
     @GetMapping("/search")
      public List<Product> search(@RequestParam(defaultValue = "0.00")Double min_value, 
      @RequestParam(defaultValue = "9999999.99")Double max_value, @RequestParam(required = false) String q ){
